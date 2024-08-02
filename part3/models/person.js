@@ -24,6 +24,16 @@ const personSchema = new mongoose.Schema({
   number: {
     type: String,
     required: true,
+    minLength: [8, 'must be at least 8 characters long'],
+    validate: {
+      validator(val) {
+        // regular expression (regex), cursed
+        const regex = /^\d{2,3}-\d+$/;
+        return regex.test(val);
+      },
+      message: ({ value }) =>
+        `${value} is not a valid number! (e.g. 12-3456789 or 123-4567890)`,
+    },
   },
 });
 

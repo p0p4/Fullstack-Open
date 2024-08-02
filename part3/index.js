@@ -87,7 +87,11 @@ app.put('/api/persons/:id', (request, response, next) => {
     runValidators: true,
   })
     .then((updatedPerson) => {
-      response.json(updatedPerson);
+      if (updatedPerson) {
+        response.json(updatedPerson);
+      } else {
+        response.status(404).end();
+      }
     })
     .catch((error) => next(error));
 });
