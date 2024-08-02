@@ -29,14 +29,18 @@ app.get('/api/persons', (request, response, next) => {
     .catch((error) => next(error));
 });
 
-app.get('/info', (request, response) => {
+app.get('/info', (request, response, next) => {
   const date = new Date();
-  response.send(`
+  Person.find({})
+    .then((persons) => {
+      response.send(`
     <p>
       Phonebook has info for ${persons.length} people
       <br/>
       ${date}
     </p>`);
+    })
+    .catch((error) => next(error));
 });
 
 app.get('/api/persons/:id', (request, response, next) => {
@@ -59,21 +63,26 @@ app.post('/api/persons', (request, response, next) => {
       error: 'name or number is missing',
     });
   }
-  // else if (persons.find((person) => person.name === body.name)) {
-  //   return response.status(400).json({
-  //     error: 'name must be unique',
-  //   });
-  // }
 
-  const person = new Person({
-    name: body.name,
-    number: body.number,
-  });
+  Person.exists({ name: body.name })
+    .then((exists) => {
+      if (exists) {
+        return response.status(400).json({
+          error: 'name must be unique',
+        });
+      }
 
-  person
-    .save()
-    .then((savedPerson) => {
-      response.json(savedPerson);
+      const person = new Person({
+        name: body.name,
+        number: body.number,
+      });
+
+      person
+        .save()
+        .then((savedPerson) => {
+          response.json(savedPerson);
+        })
+        .catch((error) => next(error));
     })
     .catch((error) => next(error));
 });
@@ -108,6 +117,7 @@ const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' });
 };
 
+// next is required as a parameter even if not used!
 const errorHandler = (error, request, response, next) => {
   console.error(error.message);
 
@@ -117,7 +127,7 @@ const errorHandler = (error, request, response, next) => {
     return response.status(400).json({ error: error.message });
   }
 
-  next(error);
+  return response.status(500).send({ error: 'internal server error' });
 };
 
 // if the request doesn't match any of the routes

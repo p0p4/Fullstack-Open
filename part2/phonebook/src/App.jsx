@@ -69,8 +69,6 @@ const App = () => {
   const [filter, setFilter] = useState('');
   const [message, setMessage] = useState(null);
 
-  console.log('render');
-
   useEffect(() => {
     personServices.getAll().then((initialPersons) => {
       setPersons(initialPersons);
