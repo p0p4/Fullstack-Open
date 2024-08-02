@@ -41,21 +41,13 @@ const Persons = ({ persons, setPersons, setMessage, filter }) => {
 
   const handleDelete = (person) => {
     window.confirm(`Delete ${person.name} ?`) &&
-      personServices
-        .remove(person.id)
-        .then(() => {
-          setPersons(persons.filter((p) => p.id !== person.id));
-          setMessage({
-            text: `${person.name} deleted`,
-            color: 'green',
-          });
-        })
-        .catch(() => {
-          setMessage({
-            text: `Information of ${person.name} has already been removed from server`,
-            color: 'red',
-          });
+      personServices.remove(person.id).then(() => {
+        setPersons(persons.filter((p) => p.id !== person.id));
+        setMessage({
+          text: `${person.name} deleted`,
+          color: 'green',
         });
+      });
     setTimeout(() => {
       setMessage(null);
     }, 5000);
@@ -96,10 +88,15 @@ const App = () => {
         number: newNumber,
       };
 
-      personServices.create(personObject).then((returnedPerson) => {
-        setPersons(persons.concat(returnedPerson));
-        setMessage({ text: `Added ${newName}`, color: 'green' });
-      });
+      personServices
+        .create(personObject)
+        .then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson));
+          setMessage({ text: `Added ${newName}`, color: 'green' });
+        })
+        .catch((error) => {
+          setMessage({ text: error.response.data.error, color: 'red' });
+        });
     } else {
       const confirmUpdate = window.confirm(
         `${newName} is already added to phonebook, replace the old number with a new one?`
@@ -119,11 +116,15 @@ const App = () => {
             );
             setMessage({ text: `Updated ${newName}`, color: 'green' });
           })
-          .catch(() => {
-            setMessage({
-              text: `Information of ${newName} has already been removed from server`,
-              color: 'red',
-            });
+          .catch((error) => {
+            if (error.response.data.error) {
+              setMessage({ text: error.response.data.error, color: 'red' });
+            } else {
+              setMessage({
+                text: `Information of ${newName} has already been removed from server`,
+                color: 'red',
+              });
+            }
           });
       } else {
         alert(`${newName} is already added to phonebook`);
