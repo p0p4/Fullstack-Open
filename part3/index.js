@@ -6,8 +6,12 @@ const app = express();
 // json parser
 app.use(express.json());
 
-// logger
-app.use(morgan('tiny'));
+// custom token for logging
+morgan.token('body', (request) => JSON.stringify(request.body));
+// logger based on tiny config
+app.use(
+  morgan(':method :url :status :res[content-length] - :response-time ms :body')
+);
 
 let persons = [
   {
