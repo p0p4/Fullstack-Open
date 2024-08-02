@@ -8,6 +8,8 @@ const app = express();
 app.use(express.json());
 // enables cross-origin resource sharing
 app.use(cors());
+// grant public access to given directory
+app.use(express.static('dist'));
 
 // custom token for logging
 morgan.token('body', (request) => JSON.stringify(request.body));
