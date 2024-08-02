@@ -21,29 +21,6 @@ app.use(
   morgan(':method :url :status :res[content-length] - :response-time ms :body')
 );
 
-let persons = [
-  {
-    id: '1',
-    name: 'Arto Hellas',
-    number: '040-123456',
-  },
-  {
-    id: '2',
-    name: 'Ada Lovelace',
-    number: '39-44-5323523',
-  },
-  {
-    id: '3',
-    name: 'Dan Abramov',
-    number: '12-43-234345',
-  },
-  {
-    id: '4',
-    name: 'Mary Poppendieck',
-    number: '39-23-6423122',
-  },
-];
-
 app.get('/api/persons', (request, response) => {
   Person.find({}).then((persons) => {
     response.json(persons);
@@ -78,17 +55,6 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end();
 });
 
-const generateId = () => {
-  const numbers = '0123456789abcdef';
-  let id = '';
-
-  for (let i = 0; i < 8; i++) {
-    id += numbers[Math.floor(Math.random() * 16)];
-  }
-
-  return id;
-};
-
 app.post('/api/persons', (request, response) => {
   const body = request.body;
 
@@ -96,24 +62,24 @@ app.post('/api/persons', (request, response) => {
     return response.status(400).json({
       error: 'name or number is missing',
     });
-  } else if (persons.find((person) => person.name === body.name)) {
-    return response.status(400).json({
-      error: 'name must be unique',
-    });
   }
+  // else if (persons.find((person) => person.name === body.name)) {
+  //   return response.status(400).json({
+  //     error: 'name must be unique',
+  //   });
+  // }
 
-  const person = {
-    id: generateId(),
+  const person = new Person({
     name: body.name,
     number: body.number,
-  };
+  });
 
-  persons = persons.concat(person);
-
-  response.json(person);
+  person.save().then((savedPerson) => {
+    response.json(savedPerson);
+  });
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
