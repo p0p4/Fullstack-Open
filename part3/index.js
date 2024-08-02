@@ -1,10 +1,13 @@
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 
 const app = express();
 
 // json parser
 app.use(express.json());
+// enables cross-origin resource sharing
+app.use(cors());
 
 // custom token for logging
 morgan.token('body', (request) => JSON.stringify(request.body));
