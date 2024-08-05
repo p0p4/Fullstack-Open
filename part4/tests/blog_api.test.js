@@ -70,6 +70,27 @@ describe('blog api tests', () => {
 
       assert(addedBlog)
     })
+    test('handling of undefined likes property', async () => {
+      const testBlog = {
+        title: 'Test Blog2',
+        author: 'Test Author2',
+        url: 'http://testurl2.com',
+      }
+
+      await api
+        .post('/api/blogs')
+        .send(testBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+      const blogsAtEnd = await helper.blogsInDb()
+
+      const addedBlog = blogsAtEnd.find(
+        (blog) => blog.title === testBlog.title && blog.author === testBlog.author && blog.url === testBlog.url
+      )
+
+      assert.strictEqual(addedBlog.likes, 0)
+    })
   })
 })
 
