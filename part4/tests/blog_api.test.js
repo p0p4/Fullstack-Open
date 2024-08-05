@@ -31,6 +31,15 @@ describe('verifying integrity of get requests', () => {
 
     assert.strictEqual(response.body.length, helper.initialBlogs.length)
   })
+
+  test('unique identifiers are properly named', async () => {
+    const response = await api.get('/api/blogs')
+
+    for (let blog of response.body) {
+      // ".prototype" can be used to ignore the properties of the object itself
+      assert.strictEqual(Object.prototype.hasOwnProperty.call(blog, 'id'), true)
+    }
+  })
 })
 
 after(async () => {
