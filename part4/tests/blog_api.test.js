@@ -91,6 +91,14 @@ describe('blog api tests', () => {
 
       assert.strictEqual(addedBlog.likes, 0)
     })
+    test('fails with statuscode 400 if title or url are missing', async () => {
+      const testBlog = {
+        author: 'Test Author3',
+        likes: 3,
+      }
+
+      await api.post('/api/blogs').send(testBlog).expect(400)
+    })
   })
 })
 
