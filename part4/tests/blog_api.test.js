@@ -37,7 +37,7 @@ describe('blog api tests', () => {
       const response = await api.get('/api/blogs')
 
       for (let blog of response.body) {
-        // ".prototype" can be used to ignore the properties of the object itself
+        // ".prototype" can be used to ignore the methods of the object
         assert(Object.prototype.hasOwnProperty.call(blog, 'id'))
       }
     })
@@ -98,6 +98,11 @@ describe('blog api tests', () => {
       }
 
       await api.post('/api/blogs').send(testBlog).expect(400)
+    })
+  })
+  describe('verifying integrity of delete requests', () => {
+    test('deletion succeeds with statuscode 204', async () => {
+      await api.delete(`/api/blogs/${helper.initialBlogs[0]._id}`).expect(204)
     })
   })
 })
