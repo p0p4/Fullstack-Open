@@ -6,6 +6,7 @@ const supertest = require('supertest')
 const app = require('../app')
 
 const Blog = require('../models/blog')
+const { title } = require('node:process')
 
 const api = supertest(app)
 
@@ -13,11 +14,7 @@ describe('blog api tests', () => {
   describe('verifying integrity of get requests', () => {
     beforeEach(async () => {
       await Blog.deleteMany({})
-
-      for (let blog of helper.initialBlogs) {
-        let blogObject = new Blog(blog)
-        await blogObject.save()
-      }
+      await Blog.insertMany(helper.initialBlogs)
     })
 
     test('blogs are returned as json', async () => {
@@ -103,6 +100,27 @@ describe('blog api tests', () => {
   describe('verifying integrity of delete requests', () => {
     test('deletion succeeds with statuscode 204', async () => {
       await api.delete(`/api/blogs/${helper.initialBlogs[0]._id}`).expect(204)
+    })
+  })
+  describe('verifying integrity of put requests', () => {
+    test('updating properties of a blog', async () => {
+      const initialBlog = helper.initialBlogs[1]
+
+      const updateBlog = {
+        likes: 100,
+      }
+
+      await api
+        .put(`/api/blogs/${initialBlog._id}`)
+        .send(updateBlog)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+      const blogsAtEnd = await helper.blogsInDb()
+      const updatedBlogInDb = blogsAtEnd.find((blog) => blog.id === initialBlog._id)
+
+      assert.strictEqual(updatedBlogInDb.likes, updateBlog.likes)
+      assert.strictEqual(updatedBlogInDb.title, initialBlog.title)
     })
   })
 })
