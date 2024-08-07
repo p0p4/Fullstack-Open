@@ -6,17 +6,16 @@ const supertest = require('supertest')
 const app = require('../app')
 
 const Blog = require('../models/blog')
-const { title } = require('node:process')
 
 const api = supertest(app)
 
 describe('blog api tests', () => {
-  describe('verifying integrity of get requests', () => {
-    beforeEach(async () => {
-      await Blog.deleteMany({})
-      await Blog.insertMany(helper.initialBlogs)
-    })
+  beforeEach(async () => {
+    await Blog.deleteMany({})
+    await Blog.insertMany(helper.initialBlogs)
+  })
 
+  describe('verifying integrity of get requests', () => {
     test('blogs are returned as json', async () => {
       await api
         .get('/api/blogs')
@@ -39,6 +38,7 @@ describe('blog api tests', () => {
       }
     })
   })
+
   describe('verifying integrity of post requests', () => {
     test('a valid blog can be added', async () => {
       const testBlog = {
@@ -97,11 +97,13 @@ describe('blog api tests', () => {
       await api.post('/api/blogs').send(testBlog).expect(400)
     })
   })
+
   describe('verifying integrity of delete requests', () => {
     test('deletion succeeds with statuscode 204', async () => {
       await api.delete(`/api/blogs/${helper.initialBlogs[0]._id}`).expect(204)
     })
   })
+
   describe('verifying integrity of put requests', () => {
     test('updating properties of a blog', async () => {
       const initialBlog = helper.initialBlogs[1]
