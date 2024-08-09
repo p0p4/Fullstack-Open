@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -11,6 +12,18 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [notification, setNotification] = useState(null)
+
+  const notificationTimeout = useRef(null)
+
+  const resetNotificationTimeout = (time = 5000) => {
+    if (notificationTimeout.current) {
+      clearTimeout(notificationTimeout.current)
+    }
+    notificationTimeout.current = setTimeout(() => {
+      setNotification(null)
+    }, time)
+  }
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -44,13 +57,32 @@ const App = () => {
       blogService.setToken(user.token)
       setUsername('')
       setPassword('')
+      setNotification({
+        text: `${user.name} logged in`,
+        color: 'green',
+      })
+      resetNotificationTimeout(5000)
     } catch (exception) {
-      console.log(exception)
+      if (exception.response.status === 401) {
+        setNotification({
+          text: 'wrong username or password',
+          color: 'red',
+        })
+        resetNotificationTimeout(5000)
+      } else {
+        console.error(exception)
+      }
     }
   }
 
   const handleLogout = (event) => {
     event.preventDefault()
+
+    setNotification({
+      text: `${user.name} logged out`,
+      color: 'green',
+    })
+    resetNotificationTimeout(5000)
 
     setUser(null)
     window.localStorage.removeItem('loggedBlogAppUser')
@@ -65,11 +97,29 @@ const App = () => {
       url,
     }
 
-    const newBlog = await blogService.create(blogObject)
-    setBlogs(blogs.concat(newBlog))
-    setTitle('')
-    setAuthor('')
-    setUrl('')
+    try {
+      const newBlog = await blogService.create(blogObject)
+      setBlogs(blogs.concat(newBlog))
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+
+      setNotification({
+        text: `a new blog ${newBlog.title} by ${newBlog.author} added`,
+        color: 'green',
+      })
+      resetNotificationTimeout(5000)
+    } catch (exception) {
+      if (exception.response.status === 400) {
+        setNotification({
+          text: 'missing title or url',
+          color: 'red',
+        })
+        resetNotificationTimeout(5000)
+      } else {
+        console.error(exception)
+      }
+    }
   }
 
   const loginForm = () => (
@@ -123,6 +173,7 @@ const App = () => {
     return (
       <>
         <h2>Log in to application</h2>
+        <Notification message={notification} />
         {loginForm()}
       </>
     )
@@ -131,6 +182,7 @@ const App = () => {
   return (
     <>
       <h2>Blogs</h2>
+      <Notification message={notification} />
       {userStatus()}
       {blogForm()}
       {blogList()}
