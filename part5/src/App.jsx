@@ -109,6 +109,15 @@ const App = () => {
     }
   }
 
+  const updateBlog = async (blogObject) => {
+    try {
+      await blogService.update(blogObject.id, blogObject)
+      fetchBlogs()
+    } catch (exception) {
+      console.error(exception)
+    }
+  }
+
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <label>username:</label>
@@ -135,7 +144,7 @@ const App = () => {
   const blogList = () => (
     <div>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
       ))}
     </div>
   )
