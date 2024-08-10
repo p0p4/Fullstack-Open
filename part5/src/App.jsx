@@ -115,8 +115,29 @@ const App = () => {
       await blogService.update(blogObject.id, blogObject)
       // we only implemented the nesting for the get blogs route so it's used
       fetchBlogs()
+      console.log(blogObject)
     } catch (exception) {
       console.error(exception)
+    }
+  }
+
+  const deleteBlog = async (blogObject) => {
+    try {
+      await blogService.remove(blogObject.id)
+      fetchBlogs()
+      showNotification({
+        text: `blog ${blogObject.title} by ${blogObject.author} removed`,
+        color: 'green',
+      })
+    } catch (exception) {
+      if (exception.response.status === 401) {
+        showNotification({
+          text: 'unauthorized request',
+          color: 'red',
+        })
+      } else {
+        console.error(exception)
+      }
     }
   }
 
@@ -146,7 +167,7 @@ const App = () => {
   const blogList = () => (
     <div>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} deleteBlog={deleteBlog} />
       ))}
     </div>
   )
