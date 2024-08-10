@@ -111,7 +111,9 @@ const App = () => {
 
   const updateBlog = async (blogObject) => {
     try {
+      // this await only returns a user id instead of a nested user object
       await blogService.update(blogObject.id, blogObject)
+      // we only implemented the nesting for the get blogs route so it's used
       fetchBlogs()
     } catch (exception) {
       console.error(exception)
