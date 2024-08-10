@@ -91,7 +91,7 @@ const App = () => {
       blogFormRef.current.toggleVisibility()
 
       const newBlog = await blogService.create(blogObject)
-      setBlogs(blogs.concat(newBlog))
+      fetchBlogs()
 
       showNotification({
         text: `a new blog ${newBlog.title} by ${newBlog.author} added`,
