@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
+import NewBlogForm from './components/NewBlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
@@ -10,9 +11,6 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const [notification, setNotification] = useState(null)
 
   const notificationTimeout = useRef(null)
@@ -88,23 +86,13 @@ const App = () => {
     })
   }
 
-  const addBlog = async (event) => {
-    event.preventDefault()
-
-    const blogObject = {
-      title,
-      author,
-      url,
-    }
-
+  const addBlog = async (blogObject) => {
     try {
+      blogFormRef.current.toggleVisibility()
+
       const newBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat(newBlog))
 
-      blogFormRef.current.toggleVisibility()
-      setTitle('')
-      setAuthor('')
-      setUrl('')
       showNotification({
         text: `a new blog ${newBlog.title} by ${newBlog.author} added`,
         color: 'green',
@@ -137,28 +125,6 @@ const App = () => {
     </form>
   )
 
-  const blogForm = () => {
-    return (
-      <>
-        <Togglable buttonLabel='new blog' ref={blogFormRef}>
-          <form onSubmit={addBlog}>
-            <h2>create new</h2>
-            <label>title:</label>
-            <input type='text' value={title} onChange={({ target }) => setTitle(target.value)} />
-            <br />
-            <label>author:</label>
-            <input type='text' value={author} onChange={({ target }) => setAuthor(target.value)} />
-            <br />
-            <label>url:</label>
-            <input type='text' value={url} onChange={({ target }) => setUrl(target.value)} />
-            <br />
-            <button type='submit'>create</button>
-          </form>
-        </Togglable>
-      </>
-    )
-  }
-
   const userStatus = () => (
     <form onSubmit={handleLogout}>
       <label>{user.name} logged in</label>
@@ -189,7 +155,9 @@ const App = () => {
       <h2>Blogs</h2>
       <Notification message={notification} />
       {userStatus()}
-      {blogForm()}
+      <Togglable buttonLabel='new blog' ref={blogFormRef}>
+        <NewBlogForm createBlog={addBlog} />
+      </Togglable>
       {blogList()}
     </>
   )
