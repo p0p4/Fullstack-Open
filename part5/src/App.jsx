@@ -115,7 +115,6 @@ const App = () => {
       await blogService.update(blogObject.id, blogObject)
       // we only implemented the nesting for the get blogs route so it's used
       fetchBlogs()
-      console.log(blogObject)
     } catch (exception) {
       console.error(exception)
     }
