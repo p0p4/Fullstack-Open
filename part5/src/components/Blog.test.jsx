@@ -37,4 +37,21 @@ describe('<Blog />', () => {
     expect(screen.getByText(blog.url)).toBeDefined()
     expect(screen.getByText(`likes ${blog.likes}`)).toBeDefined()
   })
+
+  test('like button event handler is called correctly', async () => {
+    const user = userEvent.setup()
+    const updateBlog = vi.fn()
+
+    // re-render the component with the mock function
+    render(<Blog blog={blog} updateBlog={updateBlog} deleteBlog={() => {}} />, { container })
+
+    const viewButton = screen.getByText('view')
+    const likeButton = screen.getByText('like')
+
+    await user.click(viewButton)
+    await user.click(likeButton)
+    await user.click(likeButton)
+
+    expect(updateBlog.mock.calls).toHaveLength(2)
+  })
 })
