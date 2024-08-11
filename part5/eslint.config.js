@@ -3,14 +3,18 @@ import globals from 'globals'
 import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
+import globalsVitest from 'globals-vitest'
 
 export default [
   {
     files: ['**/*.{js,jsx}'],
-    ignores: ['node_modules', 'dist', 'eslint.config.js', 'vite.config.js'],
+    ignores: ['node_modules', 'dist'],
     languageOptions: {
       ecmaVersion: 2020,
-      globals: globals.browser,
+      globals: {
+        ...globals.browser,
+        ...globalsVitest,
+      },
       parserOptions: {
         ecmaVersion: 'latest',
         ecmaFeatures: { jsx: true },
@@ -32,14 +36,20 @@ export default [
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
 
       indent: ['error', 2],
-      'linebreak-style': ['error', 'unix'],
       quotes: ['error', 'single'],
       semi: ['error', 'never'],
       eqeqeq: 'error',
+      'linebreak-style': ['error', 'unix'],
       'no-trailing-spaces': 'error',
       'object-curly-spacing': ['error', 'always'],
-      'arrow-spacing': ['error', { before: true, after: true }],
-      'no-console': 'off',
+      'arrow-spacing': [
+        'error',
+        {
+          before: true,
+          after: true,
+        },
+      ],
+      'no-console': 0,
     },
   },
 ]
