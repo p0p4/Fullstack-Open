@@ -9,4 +9,22 @@ const loginWith = async (page, username, password) => {
   await loginButton.click()
 }
 
-export { loginWith }
+const createBlog = async (page, blog) => {
+  const newBlogButton = page.getByRole('button', { name: 'new blog' })
+
+  await newBlogButton.click()
+
+  const title = page.getByTestId('title')
+  const author = page.getByTestId('author')
+  const url = page.getByTestId('url')
+  const createButton = page.getByRole('button', { name: 'create' })
+
+  await title.fill(blog.title)
+  await author.fill(blog.author)
+  await url.fill(blog.url)
+  await createButton.click()
+
+  await page.getByText(blog.title).waitFor()
+}
+
+export { loginWith, createBlog }

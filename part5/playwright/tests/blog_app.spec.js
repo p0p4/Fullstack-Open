@@ -1,5 +1,6 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
-const { loginWith } = require('./helper')
+const { loginWith, createBlog } = require('./helper')
+const { title } = require('process')
 
 describe('Blog app', () => {
   const user = {
@@ -76,6 +77,35 @@ describe('Blog app', () => {
 
       await expect(blogList).toContainText(blog.title)
       await expect(blogList).toContainText(blog.author)
+    })
+
+    describe('and a blogs exists', () => {
+      const blogs = []
+      beforeEach(async ({ page }) => {
+        const blogCount = 3
+        for (let i = 0; i < blogCount; i++) {
+          blogs.push({
+            title: `titleTest${i}`,
+            author: `authorTest${i}`,
+            url: `urlTest${i}`,
+          })
+          await createBlog(page, blogs[i])
+        }
+      })
+
+      test('a blog can be liked', async ({ page }) => {
+        const blogList = page.getByTestId('blogList')
+        const blog = blogList.locator('div').filter({ hasText: blogs[0].title })
+        const viewButton = blog.getByRole('button', { name: 'view' })
+
+        await viewButton.click()
+
+        const likeButton = blog.getByRole('button', { name: 'like' })
+
+        await likeButton.click()
+
+        await expect(page.getByText('likes 1')).toBeVisible()
+      })
     })
   })
 })
