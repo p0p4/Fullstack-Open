@@ -8,11 +8,19 @@ describe('Blog app', () => {
     password: 'password',
     name: 'nameTest',
   }
+  const userTwo = {
+    username: 'usernameTest2',
+    password: 'password2',
+    name: 'nameTest2',
+  }
 
   beforeEach(async ({ page, request }) => {
     await request.post('/api/testing/reset')
     await request.post('/api/users', {
       data: user,
+    })
+    await request.post('/api/users', {
+      data: userTwo,
     })
 
     await page.goto('/')
@@ -111,7 +119,7 @@ describe('Blog app', () => {
 
         await viewButton.click()
 
-        expect(blog).toContainText(user.name)
+        await expect(blog).toContainText(user.name)
 
         page.on('dialog', async (dialog) => {
           await dialog.accept()
@@ -119,6 +127,27 @@ describe('Blog app', () => {
         await deleteButton.click()
 
         await expect(blogList).not.toContainText(blogs[0].title)
+      })
+
+      test('delete button is only shown to the creator', async ({ page }) => {
+        const blogList = page.getByTestId('blogList')
+        const blog = blogList.locator('div').filter({ hasText: blogs[0].title })
+        const viewButton = blog.getByRole('button', { name: 'view' })
+        const deleteButton = blog.getByRole('button', { name: 'remove' })
+        const logOutButton = page.getByRole('button', { name: 'logout' })
+
+        await viewButton.click()
+
+        await expect(blog).toContainText(user.name)
+        await expect(deleteButton).toBeVisible()
+
+        await logOutButton.click()
+        await loginWith(page, userTwo.username, userTwo.password)
+
+        await viewButton.click()
+
+        await expect(blog).not.toContainText(userTwo.name)
+        await expect(deleteButton).not.toBeVisible()
       })
     })
   })
