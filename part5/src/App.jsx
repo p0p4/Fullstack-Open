@@ -141,7 +141,7 @@ const App = () => {
   }
 
   const loginForm = () => (
-    <form onSubmit={handleLogin}>
+    <form data-testid='loginForm' onSubmit={handleLogin}>
       <label>username:</label>
       <input type='text' value={username} onChange={({ target }) => setUsername(target.value)} />
       <br />
@@ -187,7 +187,7 @@ const App = () => {
       <Notification message={notification} />
       {userStatus()}
       <Togglable buttonLabel='new blog' ref={blogFormRef}>
-        <NewBlogForm createBlog={addBlog} />
+        <NewBlogForm addBlog={addBlog} />
       </Togglable>
       {blogList()}
     </>

@@ -19,14 +19,14 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
     marginBottom: 5,
   }
 
-  const addLike = () => {
+  const handleLike = () => {
     updateBlog({
       ...blog,
       likes: blog.likes + 1,
     })
   }
 
-  const removeBlog = () => {
+  const handleDelete = () => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
       deleteBlog(blog)
     }
@@ -46,9 +46,9 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
         <a href={blog.url}>{blog.url}</a>
         <br />
         <span>likes {blog.likes}</span>
-        <button onClick={addLike}>like</button>
+        <button onClick={handleLike}>like</button>
         <div>{blog.user.name}</div>
-        <button onClick={removeBlog}>remove</button>
+        <button onClick={handleDelete}>remove</button>
       </div>
     </div>
   )
