@@ -26,22 +26,21 @@ describe('Blog app', () => {
 
   describe('Login', () => {
     test('succeeds with correct credentials', async ({ page }) => {
-      await loginWith(page, user.username, user.password)
-
       const userStatus = page.getByTestId('userStatus')
+
+      await loginWith(page, user.username, user.password)
 
       await expect(userStatus).toBeVisible()
     })
 
     test('fails with wrong credentials', async ({ page }) => {
-      await loginWith(page, user.username, 'wrong')
-
       const notificationElement = page.getByTestId('notification')
+      const userStatus = page.getByTestId('userStatus')
+
+      await loginWith(page, user.username, 'wrong')
 
       await expect(notificationElement).toContainText('wrong username or password')
       await expect(notificationElement).toHaveCSS('color', 'rgb(255, 0, 0)')
-
-      const userStatus = page.getByTestId('userStatus')
 
       await expect(userStatus).not.toBeVisible()
     })
@@ -60,20 +59,18 @@ describe('Blog app', () => {
 
     test('a new blog can be created', async ({ page }) => {
       const newBlogButton = page.getByRole('button', { name: 'new blog' })
-
-      await newBlogButton.click()
-
+      const blogList = page.getByTestId('blogList')
       const title = page.getByTestId('title')
       const author = page.getByTestId('author')
       const url = page.getByTestId('url')
       const createButton = page.getByRole('button', { name: 'create' })
 
+      await newBlogButton.click()
+
       await title.fill(blog.title)
       await author.fill(blog.author)
       await url.fill(blog.url)
       await createButton.click()
-
-      const blogList = page.getByTestId('blogList')
 
       await expect(blogList).toContainText(blog.title)
       await expect(blogList).toContainText(blog.author)
@@ -97,14 +94,31 @@ describe('Blog app', () => {
         const blogList = page.getByTestId('blogList')
         const blog = blogList.locator('div').filter({ hasText: blogs[0].title })
         const viewButton = blog.getByRole('button', { name: 'view' })
+        const likeButton = blog.getByRole('button', { name: 'like' })
 
         await viewButton.click()
-
-        const likeButton = blog.getByRole('button', { name: 'like' })
 
         await likeButton.click()
 
         await expect(page.getByText('likes 1')).toBeVisible()
+      })
+
+      test('a blog can be deleted', async ({ page }) => {
+        const blogList = page.getByTestId('blogList')
+        const blog = blogList.locator('div').filter({ hasText: blogs[0].title })
+        const viewButton = blog.getByRole('button', { name: 'view' })
+        const deleteButton = blog.getByRole('button', { name: 'remove' })
+
+        await viewButton.click()
+
+        expect(blog).toContainText(user.name)
+
+        page.on('dialog', async (dialog) => {
+          await dialog.accept()
+        })
+        await deleteButton.click()
+
+        await expect(blogList).not.toContainText(blogs[0].title)
       })
     })
   })
