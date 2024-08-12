@@ -170,7 +170,7 @@ const App = () => {
   )
 
   const blogList = () => (
-    <div>
+    <div data-testid='blogList'>
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} updateBlog={updateBlog} deleteBlog={deleteBlog} />
       ))}

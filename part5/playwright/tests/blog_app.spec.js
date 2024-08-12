@@ -1,4 +1,5 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
+const { loginWith } = require('./helper')
 
 describe('Blog app', () => {
   const user = {
@@ -8,12 +9,12 @@ describe('Blog app', () => {
   }
 
   beforeEach(async ({ page, request }) => {
-    await request.post('http://localhost:3003/api/testing/reset')
-    await request.post('http://localhost:3003/api/users', {
+    await request.post('/api/testing/reset')
+    await request.post('/api/users', {
       data: user,
     })
 
-    await page.goto('http://localhost:5173')
+    await page.goto('/')
   })
 
   test('Login form is shown', async ({ page }) => {
@@ -24,14 +25,7 @@ describe('Blog app', () => {
 
   describe('Login', () => {
     test('succeeds with correct credentials', async ({ page }) => {
-      const loginForm = page.getByTestId('loginForm')
-      const username = page.getByTestId('username')
-      const password = page.getByTestId('password')
-      const loginButton = loginForm.getByRole('button', { name: 'login' })
-
-      await username.fill(user.username)
-      await password.fill(user.password)
-      await loginButton.click()
+      await loginWith(page, user.username, user.password)
 
       const userStatus = page.getByTestId('userStatus')
 
@@ -39,14 +33,7 @@ describe('Blog app', () => {
     })
 
     test('fails with wrong credentials', async ({ page }) => {
-      const loginForm = page.getByTestId('loginForm')
-      const username = page.getByTestId('username')
-      const password = page.getByTestId('password')
-      const loginButton = loginForm.getByRole('button', { name: 'login' })
-
-      await username.fill(user.username)
-      await password.fill('wrong')
-      await loginButton.click()
+      await loginWith(page, user.username, 'wrong')
 
       const notificationElement = page.getByTestId('notification')
 
@@ -56,6 +43,39 @@ describe('Blog app', () => {
       const userStatus = page.getByTestId('userStatus')
 
       await expect(userStatus).not.toBeVisible()
+    })
+  })
+
+  describe('When logged in', () => {
+    const blog = {
+      title: 'titleTest',
+      author: 'authorTest',
+      url: 'urlTest',
+    }
+
+    beforeEach(async ({ page }) => {
+      await loginWith(page, user.username, user.password)
+    })
+
+    test('a new blog can be created', async ({ page }) => {
+      const newBlogButton = page.getByRole('button', { name: 'new blog' })
+
+      await newBlogButton.click()
+
+      const title = page.getByTestId('title')
+      const author = page.getByTestId('author')
+      const url = page.getByTestId('url')
+      const createButton = page.getByRole('button', { name: 'create' })
+
+      await title.fill(blog.title)
+      await author.fill(blog.author)
+      await url.fill(blog.url)
+      await createButton.click()
+
+      const blogList = page.getByTestId('blogList')
+
+      await expect(blogList).toContainText(blog.title)
+      await expect(blogList).toContainText(blog.author)
     })
   })
 })
