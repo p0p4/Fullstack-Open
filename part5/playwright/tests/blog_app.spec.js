@@ -1,6 +1,5 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
 const { loginWith, createBlog } = require('./helper')
-const { title } = require('process')
 
 describe('Blog app', () => {
   const user = {
@@ -27,14 +26,14 @@ describe('Blog app', () => {
   })
 
   test('Login form is shown', async ({ page }) => {
-    const loginForm = page.getByTestId('loginForm')
+    const loginForm = await page.getByTestId('loginForm')
 
     await expect(loginForm).toBeVisible()
   })
 
   describe('Login', () => {
     test('succeeds with correct credentials', async ({ page }) => {
-      const userStatus = page.getByTestId('userStatus')
+      const userStatus = await page.getByTestId('userStatus')
 
       await loginWith(page, user.username, user.password)
 
@@ -42,8 +41,8 @@ describe('Blog app', () => {
     })
 
     test('fails with wrong credentials', async ({ page }) => {
-      const notificationElement = page.getByTestId('notification')
-      const userStatus = page.getByTestId('userStatus')
+      const notificationElement = await page.getByTestId('notification')
+      const userStatus = await page.getByTestId('userStatus')
 
       await loginWith(page, user.username, 'wrong')
 
@@ -66,19 +65,8 @@ describe('Blog app', () => {
     })
 
     test('a new blog can be created', async ({ page }) => {
-      const newBlogButton = page.getByRole('button', { name: 'new blog' })
-      const blogList = page.getByTestId('blogList')
-      const title = page.getByTestId('title')
-      const author = page.getByTestId('author')
-      const url = page.getByTestId('url')
-      const createButton = page.getByRole('button', { name: 'create' })
-
-      await newBlogButton.click()
-
-      await title.fill(blog.title)
-      await author.fill(blog.author)
-      await url.fill(blog.url)
-      await createButton.click()
+      const blogList = await page.getByTestId('blogList')
+      await createBlog(page, blog)
 
       await expect(blogList).toContainText(blog.title)
       await expect(blogList).toContainText(blog.author)
@@ -87,6 +75,7 @@ describe('Blog app', () => {
     describe('and a blogs exists', () => {
       const blogs = []
       beforeEach(async ({ page }) => {
+        blogs.length = 0
         const blogCount = 3
         for (let i = 0; i < blogCount; i++) {
           blogs.push({
@@ -99,23 +88,23 @@ describe('Blog app', () => {
       })
 
       test('a blog can be liked', async ({ page }) => {
-        const blogList = page.getByTestId('blogList')
-        const blog = blogList.locator('div').filter({ hasText: blogs[0].title })
-        const viewButton = blog.getByRole('button', { name: 'view' })
-        const likeButton = blog.getByRole('button', { name: 'like' })
+        const blogList = await page.getByTestId('blogList')
+        const blog = await blogList.locator('div').filter({ hasText: blogs[2].title })
+        const viewButton = await blog.getByRole('button', { name: 'view' })
+        const likeButton = await blog.getByRole('button', { name: 'like' })
 
         await viewButton.click()
-
         await likeButton.click()
 
         await expect(page.getByText('likes 1')).toBeVisible()
       })
 
       test('a blog can be deleted', async ({ page }) => {
-        const blogList = page.getByTestId('blogList')
-        const blog = blogList.locator('div').filter({ hasText: blogs[0].title })
-        const viewButton = blog.getByRole('button', { name: 'view' })
-        const deleteButton = blog.getByRole('button', { name: 'remove' })
+        const blogIndex = 2
+        const blogList = await page.getByTestId('blogList')
+        const blog = await blogList.locator('div').filter({ hasText: blogs[blogIndex].title })
+        const viewButton = await blog.getByRole('button', { name: 'view' })
+        const deleteButton = await blog.getByRole('button', { name: 'remove' })
 
         await viewButton.click()
 
@@ -126,15 +115,16 @@ describe('Blog app', () => {
         })
         await deleteButton.click()
 
-        await expect(blogList).not.toContainText(blogs[0].title)
+        await expect(blogList).not.toContainText(blogs[blogIndex].title)
       })
 
       test('delete button is only shown to the creator', async ({ page }) => {
-        const blogList = page.getByTestId('blogList')
-        const blog = blogList.locator('div').filter({ hasText: blogs[0].title })
-        const viewButton = blog.getByRole('button', { name: 'view' })
-        const deleteButton = blog.getByRole('button', { name: 'remove' })
-        const logOutButton = page.getByRole('button', { name: 'logout' })
+        const blogIndex = 0
+        const blogList = await page.getByTestId('blogList')
+        const blog = await blogList.locator('div').filter({ hasText: blogs[blogIndex].title })
+        const viewButton = await blog.getByRole('button', { name: 'view' })
+        const deleteButton = await blog.getByRole('button', { name: 'remove' })
+        const logOutButton = await page.getByRole('button', { name: 'logout' })
 
         await viewButton.click()
 
@@ -148,6 +138,32 @@ describe('Blog app', () => {
 
         await expect(blog).not.toContainText(userTwo.name)
         await expect(deleteButton).not.toBeVisible()
+      })
+
+      test('blogs are ordered by likes', async ({ page }) => {
+        const blogList = await page.getByTestId('blogList')
+        const blogElements = await blogList.locator('> div')
+
+        const count = await blogElements.count()
+        for (let i = 0; i < count; ++i) {
+          const blog = await blogElements.filter({ hasText: blogs[i].title })
+          const viewButton = await blog.getByRole('button', { name: 'view' })
+          const likeButton = await blog.getByRole('button', { name: 'like' })
+
+          await viewButton.click()
+
+          // add likes in reverse order
+          for (let j = 0; j <= i; ++j) {
+            await likeButton.click()
+            await blog.getByText(`likes ${j + 1}`).waitFor()
+          }
+        }
+
+        // check that blogs are ordered by likes ascending
+        for (let i = 0; i < count; ++i) {
+          const blog = await blogElements.nth(i)
+          await expect(blog).toContainText(`likes ${count - i}`)
+        }
       })
     })
   })

@@ -5,7 +5,7 @@ import NewBlogForm from './NewBlogForm'
 describe('<NewBlogForm />', () => {
   test('event handler is called correctly', async () => {
     const user = userEvent.setup()
-    const createBlog = vi.fn()
+    const addBlog = vi.fn()
 
     const blog = {
       title: 'testTitle',
@@ -13,7 +13,7 @@ describe('<NewBlogForm />', () => {
       url: 'testUrl',
     }
 
-    render(<NewBlogForm createBlog={createBlog} />)
+    render(<NewBlogForm addBlog={addBlog} />)
 
     const inputs = screen.getAllByRole('textbox')
     const createButton = screen.getByText('create')
@@ -23,7 +23,7 @@ describe('<NewBlogForm />', () => {
     await user.type(inputs[2], blog.url)
     await user.click(createButton)
 
-    expect(createBlog.mock.calls).toHaveLength(1)
-    expect(createBlog.mock.calls[0][0]).toEqual(blog)
+    expect(addBlog.mock.calls).toHaveLength(1)
+    expect(addBlog.mock.calls[0][0]).toEqual(blog)
   })
 })

@@ -21,7 +21,7 @@ const NewBlogForm = ({ addBlog }) => {
   }
 
   return (
-    <form onSubmit={handleAddBlog}>
+    <form data-testid='newBlogForm' onSubmit={handleAddBlog}>
       <h2>create new</h2>
       <label>title:</label>
       <input

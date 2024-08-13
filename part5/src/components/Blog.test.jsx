@@ -15,7 +15,9 @@ describe('<Blog />', () => {
   }
 
   beforeEach(() => {
-    container = render(<Blog blog={blog} updateBlog={() => {}} deleteBlog={() => {}} />).container
+    container = render(
+      <Blog blog={blog} updateBlog={() => {}} deleteBlog={() => {}} user={blog.user} />
+    ).container
   })
 
   test('renders initial content', () => {
@@ -43,7 +45,9 @@ describe('<Blog />', () => {
     const updateBlog = vi.fn()
 
     // re-render the component with the mock function
-    render(<Blog blog={blog} updateBlog={updateBlog} deleteBlog={() => {}} />, { container })
+    render(<Blog blog={blog} updateBlog={updateBlog} deleteBlog={() => {}} user={blog.user} />, {
+      container,
+    })
 
     const viewButton = screen.getByText('view')
     const likeButton = screen.getByText('like')
