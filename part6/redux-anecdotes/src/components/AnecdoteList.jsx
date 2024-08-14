@@ -24,7 +24,6 @@ const AnecdotesList = () => {
 
   return (
     <>
-      <h2>Anecdotes</h2>
       {anecdotes.map((anecdote) => (
         <Anecdote key={anecdote.id} anecdote={anecdote} handleClick={() => vote(anecdote.id)} />
       ))}
