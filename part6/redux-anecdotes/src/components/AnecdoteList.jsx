@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 import { voteAnecdote } from '../reducers/anecdoteReducer'
-import { addNotification } from '../reducers/notificationReducer'
 
 const Anecdote = ({ anecdote, handleClick }) => {
   return (
@@ -17,6 +16,7 @@ const Anecdote = ({ anecdote, handleClick }) => {
 
 const AnecdotesList = () => {
   const dispatch = useDispatch()
+
   const anecdotes = useSelector(({ anecdotes, filter }) => {
     return anecdotes
       .filter((anecdote) => anecdote.content.toLowerCase().includes(filter.toLowerCase()))
@@ -25,7 +25,6 @@ const AnecdotesList = () => {
 
   const vote = (anecdote) => {
     dispatch(voteAnecdote(anecdote))
-    dispatch(addNotification(`You voted '${anecdote.content}'`, 5000))
   }
 
   return (

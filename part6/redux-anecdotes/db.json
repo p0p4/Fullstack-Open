@@ -33,11 +33,16 @@
     {
       "id": "60b4",
       "content": "lol",
-      "votes": 3
+      "votes": 5
     },
     {
       "id": "27ad",
       "content": "lel",
+      "votes": 0
+    },
+    {
+      "id": "f4bb",
+      "content": "heh",
       "votes": 0
     }
   ]
