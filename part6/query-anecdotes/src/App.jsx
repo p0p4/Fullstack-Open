@@ -25,6 +25,8 @@ const App = () => {
     console.log('vote')
   }
 
+  console.log('rendering')
+
   return (
     <div>
       <h3>Anecdote app</h3>
