@@ -15,6 +15,10 @@ const AnecdoteForm = () => {
       const anecdotes = queryClient.getQueryData(['anecdotes'])
       queryClient.setQueryData(['anecdotes'], anecdotes.concat(newAnecdote))
     },
+    onError: (error) => {
+      const payload = { message: error.response.data.error, seconds: 5 }
+      notificationDispatch({ type: 'SHOW', payload })
+    },
   })
 
   const onCreate = (event) => {
