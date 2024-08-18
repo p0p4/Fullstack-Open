@@ -1,8 +1,29 @@
-# React + Vite
+# [Part 5 - Testing React apps](https://fullstackopen.com/en/part5)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+This part returns to the frontend, exploring different methods for testing React code. It also involves implementing token-based authentication to enable user login for the application.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Modules
+
+[a Login in frontend](https://fullstackopen.com/en/part5/login_in_frontend)\
+[b props.children and proptypes](https://fullstackopen.com/en/part5/props_children_and_proptypes)\
+[c Testing React apps](https://fullstackopen.com/en/part5/testing_react_apps)\
+[d End to end testing: Playwright](https://fullstackopen.com/en/part5/end_to_end_testing_playwright)
+
+## Submissions
+
+- [Bloglist Frontend](./bloglist-frontend)
+- [Playwright](./playwright)
+
+## Usage
+
+### Clone the directory
+
+```shell
+git clone -n --depth=1 --filter=tree:0 \
+  git@github.com:p0p4/Fullstack-Open.git
+cd Fullstack-Open
+git sparse-checkout set --no-cone part5
+git checkout
+```
