@@ -2,16 +2,27 @@
 
 https://fullstackopen.com/en/
 
-## Deep Dive Into Modern Web Development
+### Deep Dive Into Modern Web Development
 
 This course covers React, Redux, Node.js, MongoDB, GraphQL, and TypeScript, providing an introduction to modern JavaScript-based web development. The main focus is on creating single-page applications with ReactJS that interact with REST APIs built using Node.js.
 
 ## Submissions
 
+### Completion Status
+
+![Course certificate](https://geps.dev/progress/50?dangerColor=800000&warningColor=ff9900&successColor=006600)
+<details>
+  <summary>Certificate</summary>
+    <img src="https://studies.cs.helsinki.fi/stats/api/certificate/fullstackopen/en/d16464ef9fc85fbf301a3b67f17a6b05">
+  <a href="https://studies.cs.helsinki.fi/stats/api/certificate/fullstackopen/en/d16464ef9fc85fbf301a3b67f17a6b05">source</a>
+</details>
+
 #### Clone Repository
 ```shell
 git clone git@github.com:p0p4/Fullstack-Open.git
 ```
+
+##
 
 ### [Part 0 - Fundamentals of Web apps](./part0/)
 
@@ -85,11 +96,4 @@ This part introduces Redux, a popular solution for managing state in large React
 
 ##
 
-### Completion Status
 
-![Course certificate](https://geps.dev/progress/50?dangerColor=800000&warningColor=ff9900&successColor=006600)
-<details>
-  <summary>Certificate</summary>
-    <img src="https://studies.cs.helsinki.fi/stats/api/certificate/fullstackopen/en/d16464ef9fc85fbf301a3b67f17a6b05">
-  <a href="https://studies.cs.helsinki.fi/stats/api/certificate/fullstackopen/en/d16464ef9fc85fbf301a3b67f17a6b05">source</a>
-</details>
