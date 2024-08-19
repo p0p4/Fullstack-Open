@@ -10,7 +10,7 @@ This course covers React, Redux, Node.js, MongoDB, GraphQL, and TypeScript, prov
 
 ### Completion Status
 
-![Course certificate](https://geps.dev/progress/50?dangerColor=800000&warningColor=ff9900&successColor=006600)
+![Course Progression](https://geps.dev/progress/50?dangerColor=800000&warningColor=ff9900&successColor=006600)
 <details>
   <summary>Certificate</summary>
     <img src="https://github.com/user-attachments/assets/3f46ba4a-f9b4-4b1f-b75c-1e27f1111a33">
