@@ -91,4 +91,5 @@ This part introduces Redux, a popular solution for managing state in large React
 <details>
   <summary>Certificate</summary>
     <img src="https://studies.cs.helsinki.fi/stats/api/certificate/fullstackopen/en/d16464ef9fc85fbf301a3b67f17a6b05">
+  <a href="https://studies.cs.helsinki.fi/stats/api/certificate/fullstackopen/en/d16464ef9fc85fbf301a3b67f17a6b05">source</a>
 </details>
