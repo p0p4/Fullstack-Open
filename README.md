@@ -13,7 +13,7 @@ This course covers React, Redux, Node.js, MongoDB, GraphQL, and TypeScript, prov
 ![Course certificate](https://geps.dev/progress/50?dangerColor=800000&warningColor=ff9900&successColor=006600)
 <details>
   <summary>Certificate</summary>
-    <img src="https://studies.cs.helsinki.fi/stats/api/certificate/fullstackopen/en/d16464ef9fc85fbf301a3b67f17a6b05">
+    <img src="https://github.com/user-attachments/assets/3f46ba4a-f9b4-4b1f-b75c-1e27f1111a33">
   <a href="https://studies.cs.helsinki.fi/stats/api/certificate/fullstackopen/en/d16464ef9fc85fbf301a3b67f17a6b05">source</a>
 </details>
 
