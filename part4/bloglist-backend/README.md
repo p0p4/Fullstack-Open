@@ -51,7 +51,7 @@ npm run start:test
 
 ### Run tests
 
-_Avoid running all tests in parallel, specify one test at a time..._
+_Avoid running all test files in parallel, specify one at a time..._
 
 ```shell
 # in project root
