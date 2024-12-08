@@ -2,7 +2,7 @@
 
 ## Overview
 
-#### Highlists
+#### Highlights
 
 ### Modules & Exercises
 

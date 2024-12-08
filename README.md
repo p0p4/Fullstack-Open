@@ -11,6 +11,7 @@ This course covers React, Redux, Node.js, MongoDB, GraphQL, and TypeScript, prov
 ### Completion Status
 
 ![Course Progression](https://geps.dev/progress/50?dangerColor=800000&warningColor=ff9900&successColor=006600)
+
 <details>
   <summary>Certificate</summary>
     <img src="https://github.com/user-attachments/assets/3f46ba4a-f9b4-4b1f-b75c-1e27f1111a33">
@@ -18,6 +19,7 @@ This course covers React, Redux, Node.js, MongoDB, GraphQL, and TypeScript, prov
 </details>
 
 #### Clone Repository
+
 ```shell
 git clone git@github.com:p0p4/Fullstack-Open.git
 ```
@@ -94,6 +96,13 @@ This part introduces Redux, a popular solution for managing state in large React
 - [Redux Anecdotes](./part6/redux-anecdotes/)
 - [Query Anecdotes](./part6/query-anecdotes/)
 
+### [Part 7 - React router, custom hooks, styling app with CSS and webpack](./part7/)
+
+<details>
+  <summary>Summary</summary>
+This part of the course explores various themes, including React Router for managing application views based on browser URLs, additional techniques for styling React applications with CSS, and configuring a toolchain using Webpack instead of Vite. It also delves into hook functions and the creation of custom hooks.
+</details>
+
+- [Routed Anecdotes](./part7/routed-anecdotes/)
+
 ##
-
-
