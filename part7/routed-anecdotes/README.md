@@ -8,6 +8,8 @@
 
 - [React Router](https://fullstackopen.com/en/part7/react_router)
   - [7.1–7.3](https://fullstackopen.com/en/part7/react_router#exercises-7-1-7-3)
+- [Custom hooks](https://fullstackopen.com/en/part7/custom_hooks)
+  - [7.4–7.6](https://fullstackopen.com/en/part7/custom_hooks#exercises-7-4-7-8)
 
 ## Usage
 

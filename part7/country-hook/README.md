@@ -1,4 +1,4 @@
-# Part 7 - Ultimate Hooks
+# Part 7 - Country Hooks
 
 ## Overview
 
@@ -7,7 +7,7 @@
 ### Modules & Exercises
 
 - [Custom hooks](https://fullstackopen.com/en/part7/custom_hooks)
-  - [7.8](https://fullstackopen.com/en/part7/custom_hooks#exercises-7-4-7-8)
+  - [7.7](https://fullstackopen.com/en/part7/custom_hooks#exercises-7-4-7-8)
 
 ## Usage
 
@@ -19,19 +19,12 @@ npm install
 npm run dev -- --host
 ```
 
-### Run JSON Server
-
-```shell
-# in project root
-npm run server
-```
-
 ### Clone the directory
 
 ```shell
 git clone -n --depth=1 --filter=tree:0 \
   git@github.com:p0p4/Fullstack-Open.git
 cd Fullstack-Open
-git sparse-checkout set --no-cone part7/ultimate-hooks
+git sparse-checkout set --no-cone part7/country-hooks
 git checkout
 ```

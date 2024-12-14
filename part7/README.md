@@ -16,6 +16,8 @@ This part of the course explores various themes, including React Router for mana
 ## Submissions
 
 - [Routed Anecdotes](./routed-anecdotes)
+- [Country Hooks](./country-hook)
+- [Ultimate Anecdotes](./ultimate-hooks)
 
 ## Usage
 
