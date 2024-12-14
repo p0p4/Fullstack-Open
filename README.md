@@ -104,5 +104,7 @@ This part of the course explores various themes, including React Router for mana
 </details>
 
 - [Routed Anecdotes](./part7/routed-anecdotes/)
+- [Country Hooks](./part7/country-hook/)
+- [Ultimate Anecdotes](./part7/ultimate-hooks/)
 
 ##
