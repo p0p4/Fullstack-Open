@@ -1,21 +1,25 @@
 import { useState, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+
 import Blog from './components/Blog'
 import NewBlogForm from './components/NewBlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+
 import blogService from './services/blogs'
 import loginService from './services/login'
+
 import { setNotification } from './reducers/notificationReducer'
+import { initializeBlogs } from './reducers/blogReducer'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const dispatch = useDispatch()
-
   const blogFormRef = useRef()
+
+  const dispatch = useDispatch()
+  const blogs = useSelector((state) => state.blogs)
 
   const initUser = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -26,15 +30,10 @@ const App = () => {
     }
   }
 
-  const fetchBlogs = async () => {
-    const blogs = await blogService.getAll()
-    setBlogs(blogs.sort((a, b) => b.likes - a.likes))
-  }
-
   useEffect(() => {
     initUser()
-    fetchBlogs()
-  }, [])
+    dispatch(initializeBlogs())
+  }, [dispatch])
 
   const showNotification = ({ text, color, time = 5 }) => {
     dispatch(setNotification({ text, color }, time))
@@ -83,35 +82,11 @@ const App = () => {
     })
   }
 
-  const addBlog = async (blogObject) => {
-    try {
-      blogFormRef.current.toggleVisibility()
-
-      const newBlog = await blogService.create(blogObject)
-      fetchBlogs()
-
-      showNotification({
-        text: `a new blog ${newBlog.title} by ${newBlog.author} added`,
-        color: 'green',
-      })
-    } catch (exception) {
-      if (exception.response.status === 400) {
-        showNotification({
-          text: 'missing title or url',
-          color: 'red',
-        })
-      } else {
-        console.error(exception)
-      }
-    }
-  }
-
   const updateBlog = async (blogObject) => {
     try {
       // this await only returns a user id instead of a nested user object
       await blogService.update(blogObject.id, blogObject)
       // we only implemented the nesting for the get blogs route so it's used
-      fetchBlogs()
     } catch (exception) {
       console.error(exception)
     }
@@ -120,7 +95,6 @@ const App = () => {
   const deleteBlog = async (blogObject) => {
     try {
       await blogService.remove(blogObject.id)
-      fetchBlogs()
       showNotification({
         text: `blog ${blogObject.title} by ${blogObject.author} removed`,
         color: 'green',
@@ -196,7 +170,7 @@ const App = () => {
       <Notification />
       {userStatus()}
       <Togglable buttonLabel='new blog' ref={blogFormRef}>
-        <NewBlogForm addBlog={addBlog} />
+        <NewBlogForm />
       </Togglable>
       {blogList()}
     </>
